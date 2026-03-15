@@ -1,123 +1,63 @@
-import java.util.*;
+import java.util.Scanner;
 
 /**
  * ================================================================
- * MAIN CLASS : UseCase12PalindromeCheckerApp
+ * MAIN CLASS : UseCase13PalindromeCheckerApp
  * ================================================================
  *
- * Use Case 12: Strategy Pattern for Palindrome Algorithms
+ * Use Case 13: Performance Comparison
  *
  * Description:
- * This program demonstrates how different palindrome
- * checking algorithms can be selected dynamically
- * at runtime using the Strategy Design Pattern.
+ * This class measures the execution performance
+ * of a palindrome validation algorithm.
  *
- * The application:
- * 1. Defines a common PalindromeStrategy interface
- * 2. Implements StackStrategy and DequeStrategy
- * 3. Injects the strategy at runtime
- * 4. Executes the selected algorithm
- *
+ * Steps:
+ * - Accepts input string
+ * - Checks palindrome
+ * - Captures start and end time
+ * - Displays execution duration
  */
 
-public class UseCasePalindromeCheckerApp {
+public class UseCase13PalindromeCheckerApp {
 
+    // Method to check palindrome
+    public static boolean isPalindrome(String str) {
+
+        int left = 0;
+        int right = str.length() - 1;
+
+        while (left < right) {
+            if (str.charAt(left) != str.charAt(right)) {
+                return false;
+            }
+            left++;
+            right--;
+        }
+
+        return true;
+    }
+
+    // Application entry point
     public static void main(String[] args) {
 
-        Scanner sc = new Scanner(System.in);
+        Scanner scanner = new Scanner(System.in);
 
-        System.out.print("Enter a string: ");
-        String input = sc.nextLine();
+        System.out.print("Input : ");
+        String input = scanner.nextLine();
 
-        System.out.println("\nChoose Strategy");
-        System.out.println("1. Stack Strategy");
-        System.out.println("2. Deque Strategy");
+        // Capture start time
+        long startTime = System.nanoTime();
 
-        int choice = sc.nextInt();
+        boolean result = isPalindrome(input);
 
-        PalindromeStrategy strategy;
+        // Capture end time
+        long endTime = System.nanoTime();
 
-        if (choice == 1) {
-            strategy = new StackStrategy();
-        } else {
-            strategy = new DequeStrategy();
-        }
+        long executionTime = endTime - startTime;
 
-        boolean result = strategy.check(input);
+        System.out.println("Is Palindrome : " + result);
+        System.out.println("Execution Time : " + executionTime + " ns");
 
-        System.out.println("Input : " + input);
-        System.out.println("Is Palindrome? : " + result);
-    }
-}
-
-/**
- * ================================================================
- * INTERFACE : PalindromeStrategy
- * ================================================================
- *
- * This interface defines a contract for all
- * palindrome checking algorithms.
- */
-
-interface PalindromeStrategy {
-    boolean check(String input);
-}
-
-
-/**
- * ================================================================
- * CLASS : StackStrategy
- * ================================================================
- *
- * Uses Stack (LIFO) to reverse characters
- * and compare with original sequence.
- */
-
-class StackStrategy implements PalindromeStrategy {
-
-    public boolean check(String input) {
-
-        Stack<Character> stack = new Stack<>();
-
-        for (char c : input.toCharArray()) {
-            stack.push(c);
-        }
-
-        for (char c : input.toCharArray()) {
-            if (c != stack.pop()) {
-                return false;
-            }
-        }
-
-        return true;
-    }
-}
-
-
-/**
- * ================================================================
- * CLASS : DequeStrategy
- * ================================================================
- *
- * Uses Deque to compare front and rear characters.
- */
-
-class DequeStrategy implements PalindromeStrategy {
-
-    public boolean check(String input) {
-
-        Deque<Character> deque = new ArrayDeque<>();
-
-        for (char c : input.toCharArray()) {
-            deque.addLast(c);
-        }
-
-        while (deque.size() > 1) {
-            if (deque.removeFirst() != deque.removeLast()) {
-                return false;
-            }
-        }
-
-        return true;
+        scanner.close();
     }
 }
